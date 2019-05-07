@@ -8,16 +8,16 @@ import java.io.PrintWriter;
 import java.util.*;
 
 public class ClientGame {
-        private static String[] words = {"batman","conan","superman","shazam","dumbo","bumblebee","godzilla","avatar","titanic","frozen","minions","jurassic","avengers","aquaman"};
+        //private static String[] words = {"batman","conan","superman","shazam","dumbo","bumblebee","godzilla","avatar","titanic","frozen","minions","jurassic","avengers","aquaman"};
 	private static String word = "";
 	private static String asterisk = "";
 	private static int count = 0;
 
-	public  void rungame() {
+	public  void rungame(String wordn,String asteriskn) {
 		Scanner sc = new Scanner(System.in);
+                this.word = wordn;
+                this.asterisk = asteriskn;
                 count = 0;
-                word = words[(int) (Math.random() * words.length)];
-                asterisk = new String(new char[word.length()]).replace("\0", "-");
 		while (count < 7 && asterisk.contains("-")) {
 			System.out.println("Guess any letter in the word");
 			System.out.println(asterisk);
