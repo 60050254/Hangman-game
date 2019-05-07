@@ -8,11 +8,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
 
-/**
- * This class implements java socket client
- * @author pankaj
- *
- */
 public class Client extends ClientGame{
     
     private Socket socket;
@@ -23,6 +18,8 @@ public class Client extends ClientGame{
     private String message = "";
     private static String word = "";
     private static String asterisk = "";
+    private static int count = 0;
+    private static int score = 0;
    
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException{
      
@@ -40,15 +37,10 @@ public class Client extends ClientGame{
                 this.oos.writeObject("Hi");
                 this.ois = new ObjectInputStream(this.socket.getInputStream());
                 this.message = (String) ois.readObject();
-                //System.out.println(message);
                 this.port = Integer.parseInt(message);
-                
-		//this.ois = new ObjectInputStream(socket.getInputStream());
 	        toPlayOrNotToPlay();
-                
-                
+    
 	} catch (IOException ex) {
-		//handleFatalException(ex);
                 System.err.println("ERROR closing socket: ");
 	}
     }
@@ -57,25 +49,34 @@ public class Client extends ClientGame{
                 this.socket = new Socket("127.0.0.1", port);
                 this.oos = new ObjectOutputStream(this.socket.getOutputStream());
                 this.oos.writeObject("play");
-                //System.out.println(port);
                 this.ois = new ObjectInputStream(this.socket.getInputStream());
                 this.message = (String) ois.readObject();
                 
 		while (true) {
                     
-			System.out.print("Do you want to play? (y/n) ");
+                    if(count==0)System.out.print("Do you want to play? (y/n) ");
+                        
+                    else System.out.print("Do you want to play Continue? (y/n) ");
 			userInput = sc.next();
 			userInput = userInput.trim().toLowerCase();
 			if (userInput.equals("y")) {
-                                //System.out.println("ER1");
                                 this.oos.writeObject("y");
-                                //System.out.println("ER2");
                                 this.word = (String) ois.readObject();
-                                //System.out.println(word);
                                 this.asterisk = (String) ois.readObject();
-                                rungame(word,asterisk);
+                                this.score = rungame(word,asterisk);
+                                this.oos.writeObject("updatescore");
+                                this.oos.writeObject(""+score);
+                                count++;
+                                if(count==15){
+                                    System.out.println("----- End Game -----");
+                                    System.out.println("Your score is > "+this.score);
+                                    this.oos.writeObject("n");
+                                    closeConnection();
+                                    break;
+                                }
 			}
 			else if(userInput.equals("n")){
+                                System.out.println("Your score is > "+this.score);
 				System.out.println(">Disconnected<");
                                 this.oos.writeObject("n");
                                 closeConnection();
