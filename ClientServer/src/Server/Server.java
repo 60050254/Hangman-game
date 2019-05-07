@@ -17,6 +17,9 @@ public class Server {
 
     private static ServerSocket server;
     private static int port = 6666;
+    private static String[] words = {"batman","conan","superman","shazam","dumbo","bumblebee","godzilla","avatar","titanic","frozen","minions","jurassic","avengers","aquaman"};
+    private static String word = "";
+    private static String asterisk = "";
         
     public static void main(String args[]) throws ClassNotFoundException {
         
@@ -35,7 +38,7 @@ public class Server {
                 System.out.println("Message Received: " + message);
                 Random rand = new Random();
                 int newPort = rand.nextInt(9000)+1000;
-                MultiThreadRespond mr = new MultiThreadRespond(newPort,no);
+                MultiThreadRespond mr = new MultiThreadRespond(newPort,words,no);
                 thread = new Thread(mr);
                 thread.start();
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
@@ -58,3 +61,4 @@ public class Server {
     }
     
 }
+
