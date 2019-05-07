@@ -8,12 +8,13 @@ import java.io.PrintWriter;
 import java.util.*;
 
 public class ClientGame {
-        //private static String[] words = {"batman","conan","superman","shazam","dumbo","bumblebee","godzilla","avatar","titanic","frozen","minions","jurassic","avengers","aquaman"};
+       
 	private static String word = "";
 	private static String asterisk = "";
 	private static int count = 0;
+        private static int score = 0;
 
-	public  void rungame(String wordn,String asteriskn) {
+	public  int rungame(String wordn,String asteriskn) {
 		Scanner sc = new Scanner(System.in);
                 this.word = wordn;
                 this.asterisk = asteriskn;
@@ -24,7 +25,7 @@ public class ClientGame {
 			String guess = sc.next();
 			hang(guess);
 		}
-		//sc.close();
+                return score;
 	}
 
 	public static void hang(String guess) {
@@ -46,7 +47,8 @@ public class ClientGame {
 			asterisk = newasterisk;
 		}
 		if (asterisk.equals(word)) {
-			System.out.println("Correct! You win! The word was " + word);
+			System.out.println("Correct! You win! The word was \"" + word+"\"");
+                        score++;
                     
 		}
 	}
@@ -138,7 +140,7 @@ public class ClientGame {
 			System.out.println("   |         / | \\");
 			System.out.println("   |          / \\ ");
 			System.out.println("___|___      /   \\");
-			System.out.println("GAME OVER! The word was " + word);
+			System.out.println("GAME OVER! The word was \"" + word+"\"");
                         
 		}
 	}
