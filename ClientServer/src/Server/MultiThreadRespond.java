@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class MultiThreadRespond implements Runnable{
     
@@ -19,18 +20,20 @@ public class MultiThreadRespond implements Runnable{
     private int no = 0;
     private static String word = "";
     private static String asterisk = "";
+    private static int score = 0;
+    private ArrayList<String> myArrList;
     
-    public MultiThreadRespond(int port,String[] words,int no){
+    public MultiThreadRespond(int port,String[] words,int no,int scoren){
         this.port = port;
+        myArrList = new ArrayList<String>();
         try{
+           this.score = score;
            this.words = words;
-           //System.out.println(words[2]);
            this.no = no;
            server = new ServerSocket(port);
         }catch(Exception e){
             
         }
-
     }
 
     @Override
@@ -42,40 +45,47 @@ public class MultiThreadRespond implements Runnable{
                     this.ois = new ObjectInputStream(socket.getInputStream());
                     this.oos = new ObjectOutputStream(socket.getOutputStream());
                 }
-                //System.out.println(socket);
-                //System.out.println("ER1");
-               
+
                 this.message = (String) ois.readObject();
                 System.out.println("Message Received Client "+no+" : "+message);
                 
                 if(message.equalsIgnoreCase("play")){
                     System.out.println("Client "+no+" : Connected");
-                    //System.out.println("Message Received: " + message);
                     oos.writeObject(">Connect Succes<");
                 }
                 
-                if(message.equalsIgnoreCase("y")){
-                    System.out.println("Client "+no+" : Playing..");
-                    this.word = words[(int) (Math.random() * words.length)];
+                else if(message.equalsIgnoreCase("y")){
+                    if(i==1) { System.out.println("Client "+no+" : Playing.."); }
+                    
+                    for(int j=0;j<1;j++){
+                        this.word = words[(int) (Math.random() * words.length)];
+                        this.asterisk = new String(new char[word.length()]).replace("\0", "-");
+                        for(int k=0;k<myArrList.size();k++){
+                            if(myArrList.get(k).equals(this.word)){
+                                k=myArrList.size();
+                                j=-1;
+                            }
+                        }
+                    }
+                    myArrList.add(this.word);
                     System.out.println("Client "+no+" get the word is > "+word);
-                    this.asterisk = new String(new char[word.length()]).replace("\0", "-");
-                    //System.out.println(asterisk);
-                    //System.out.println(word+" "+asterisk);
                     oos.writeObject(word);
                     oos.writeObject(asterisk);
                 }
                 
-                if(message.equalsIgnoreCase("n")) {
+                else if(message.equalsIgnoreCase("updatescore")){
+                    this.message = (String) ois.readObject();
+                    this.score = Integer.parseInt(this.message);
+                }
+                
+                else if(message.equalsIgnoreCase("n")) {
+                    System.out.println("Client "+no+" total score is > "+this.score);
                     System.out.println("Client "+no+" : Stop Playing..");
                     socket.close();
                     break;
                 }
+                this.i++;
                 
-                i++;
-                        
-                //ois.close();
-                //oos.close();
-                //socket.close();
             }catch(Exception e){
 
             }
