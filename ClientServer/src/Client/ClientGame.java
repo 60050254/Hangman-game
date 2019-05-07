@@ -117,7 +117,7 @@ public class ClientGame {
 		}
 		if (count == 6) {
 			clearScreen();
-			System.out.println("Wrong guess, try again");
+			System.out.println("Wrong guess, try again!!!");
 			System.out.println("   ____________");
 			System.out.println("   |          _|_");
 			System.out.println("   |         /   \\");
