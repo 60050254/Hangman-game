@@ -57,7 +57,7 @@ public class Client extends ClientGame{
                 this.socket = new Socket("127.0.0.1", port);
                 this.oos = new ObjectOutputStream(this.socket.getOutputStream());
                 this.oos.writeObject("play");
-                System.out.println(port);
+                //System.out.println(port);
                 this.ois = new ObjectInputStream(this.socket.getInputStream());
                 this.message = (String) ois.readObject();
                 
@@ -67,10 +67,17 @@ public class Client extends ClientGame{
 			userInput = sc.next();
 			userInput = userInput.trim().toLowerCase();
 			if (userInput.equals("y")) {
-                                rungame();
+                                //System.out.println("ER1");
+                                this.oos.writeObject("y");
+                                //System.out.println("ER2");
+                                this.word = (String) ois.readObject();
+                                //System.out.println(word);
+                                this.asterisk = (String) ois.readObject();
+                                rungame(word,asterisk);
 			}
-			else {
-				System.out.println("Invalid input.");
+			else if(userInput.equals("n")){
+				System.out.println(">Disconnected<");
+                                this.oos.writeObject("n");
                                 closeConnection();
                                 break;
 			}
@@ -83,7 +90,6 @@ public class Client extends ClientGame{
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		
 		}
 	}
 }
